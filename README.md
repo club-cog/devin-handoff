@@ -19,44 +19,43 @@ Create a Devin session, get a URL, optionally poll until it's done, archive when
 
 ## Quick Start
 
+### As an agent skill
+
+Install it into your coding agent's skills folder so the agent can hand off
+tasks to Devin on its own:
+
+```bash
+git clone https://github.com/club-cog/devin-handoff-skill.git
+
+# Copy into your agent's skills directory — adjust the path for your agent
+mkdir -p .your-agent/skills
+cp -r devin-handoff-skill/ .your-agent/skills/devin-handoff/
+
+# Set your API key (get one at https://app.devin.ai/settings/api-keys)
+export DEVIN_API_KEY="your-key-here"
+```
+
+Then ask your agent to "hand this off to Devin." See [examples/](examples/)
+for per-platform setup guides (Claude Code, Cursor, Windsurf, Codex).
+
+For agents that use `AGENTS.md`, append the guide:
+
+```bash
+cat devin-handoff-skill/AGENTS.md >> your-repo/AGENTS.md
+```
+
+### From the command line
+
 ```bash
 # 1. Set your API key
 export DEVIN_API_KEY="your-key-here"  # Get one at https://app.devin.ai/settings/api-keys
 
 # 2. Create a session from any git repo
-./scripts/devin-handoff.sh create --task "Fix the flaky auth test in CI"
+./devin-handoff-skill/scripts/devin-handoff.sh create --task "Fix the flaky auth test in CI"
 # → https://app.devin.ai/sessions/abc123
 
 # 3. (Optional) Poll until it's done
-./scripts/devin-handoff.sh poll devin-abc123 --interval 15
-```
-
-## Installation
-
-### As an agent skill
-
-Copy this directory into your agent's skills folder:
-
-```bash
-# Example — adjust the path for your agent's skills directory
-mkdir -p .your-agent/skills
-cp -r devin-handoff/ .your-agent/skills/devin-handoff/
-```
-
-For agents that use `AGENTS.md`, append the guide:
-
-```bash
-cat devin-handoff/AGENTS.md >> your-repo/AGENTS.md
-```
-
-See the [examples/](examples/) directory for per-platform setup guides.
-
-### Command line (standalone)
-
-```bash
-git clone https://github.com/cognition-labs/devin-handoff.git
-export DEVIN_API_KEY="your-key-here"
-./devin-handoff/scripts/devin-handoff.sh create --task "Deploy the staging fix"
+./devin-handoff-skill/scripts/devin-handoff.sh poll devin-abc123 --interval 15
 ```
 
 ## How It Works
@@ -68,9 +67,19 @@ export DEVIN_API_KEY="your-key-here"
 
 Devin gets its own VM with shell, browser, and full repo access. It clones the repo, checks out the branch, and starts working. All sessions are tagged with `handoff`.
 
-## Context Passing
+## How Context Reaches the Cloud Session
 
-The calling agent can pass along what it's learned via `--context`:
+Devin starts in a fresh VM, so the script packages up what your local agent
+already knows and includes it in the session prompt:
+
+- **Repo and branch** — detected from `git remote` and `git rev-parse`, so Devin
+  clones the right repo and checks out the branch you're on
+- **Uncommitted changes** — the output of `git diff HEAD` (truncated to 100KB)
+  is included, so your work-in-progress carries over instead of being lost on
+  the way to the cloud. If you have local edits you don't want sent, commit or
+  stash them before creating the session.
+- **`--context`** — whatever the calling agent has learned so far: files it
+  examined, root-cause hypotheses, partial fixes
 
 ```bash
 scripts/devin-handoff.sh create \

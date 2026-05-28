@@ -292,7 +292,6 @@ cmd_poll() {
         fi
 
         # Exit 0 for successful finish, 1 for error
-        [[ "$status" == "exit" && "$status_detail" == "finished" ]] && exit 0
         [[ "$status" == "exit" ]] && exit 0
         exit 1
         ;;

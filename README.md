@@ -4,6 +4,8 @@ Hand off tasks to [Devin](https://devin.ai) from any coding agent or the command
 
 Create a Devin session, get a URL, optionally poll until it's done, archive when finished.
 
+![Demo: a coding agent hands three tasks off to three cloud Devin sessions, which open PRs that get merged](assets/devin-handoff-demo.gif)
+
 ```
 ┌──────────────┐     ┌──────────────────┐     ┌────────────┐
 │  Your Agent  │     │  devin-handoff   │     │ Devin API  │

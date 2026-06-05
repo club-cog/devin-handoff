@@ -7,7 +7,7 @@
 ```bash
 # From your project root
 mkdir -p .cursor/skills
-cp -r /path/to/devin-handoff/skills/devin-handoff/ .cursor/skills/devin-handoff/
+cp -r /path/to/devin-handoff/.agents/skills/devin-handoff/ .cursor/skills/devin-handoff/
 ```
 
 ### Windsurf
@@ -15,7 +15,7 @@ cp -r /path/to/devin-handoff/skills/devin-handoff/ .cursor/skills/devin-handoff/
 ```bash
 # From your project root
 mkdir -p .windsurf/skills
-cp -r /path/to/devin-handoff/skills/devin-handoff/ .windsurf/skills/devin-handoff/
+cp -r /path/to/devin-handoff/.agents/skills/devin-handoff/ .windsurf/skills/devin-handoff/
 ```
 
 ## API Key Setup

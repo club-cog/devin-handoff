@@ -22,7 +22,7 @@ Codex also reads `AGENTS.md` files for agent guidance. You can:
 ```bash
 # From your project root
 mkdir -p scripts
-cp /path/to/devin-handoff/skills/devin-handoff/scripts/devin-handoff.sh scripts/devin-handoff.sh
+cp /path/to/devin-handoff/.agents/skills/devin-handoff/scripts/devin-handoff.sh scripts/devin-handoff.sh
 chmod +x scripts/devin-handoff.sh
 
 # Append the Devin handoff guidance to your AGENTS.md

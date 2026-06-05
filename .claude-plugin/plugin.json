@@ -1,7 +1,7 @@
 {
   "name": "devin-handoff",
   "displayName": "Devin Handoff",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Hand off tasks to a cloud Devin session — VM, browser, shell, and full repo access. Create a session, get a URL, poll until done.",
   "author": {
     "name": "Cognition"
@@ -9,5 +9,6 @@
   "homepage": "https://github.com/club-cog/devin-handoff",
   "repository": "https://github.com/club-cog/devin-handoff",
   "license": "MIT",
-  "keywords": ["devin", "handoff", "delegation", "cloud", "agent"]
+  "keywords": ["devin", "handoff", "delegation", "cloud", "agent"],
+  "skills": "./.agents/skills/"
 }

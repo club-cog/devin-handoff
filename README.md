@@ -52,7 +52,7 @@ git clone https://github.com/club-cog/devin-handoff.git
 
 # Copy into your agent's skills directory — adjust the path for your agent
 mkdir -p .your-agent/skills
-cp -r devin-handoff/skills/devin-handoff/ .your-agent/skills/devin-handoff/
+cp -r devin-handoff/.agents/skills/devin-handoff/ .your-agent/skills/devin-handoff/
 
 # Set your API key (get one at https://app.devin.ai/settings/api-keys)
 export DEVIN_API_KEY="your-key-here"

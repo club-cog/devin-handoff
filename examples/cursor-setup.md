@@ -1,8 +1,8 @@
-# Cursor / Windsurf Setup
+# Cursor Setup
 
 ## Installation
 
-### Cursor
+### Per-project
 
 ```bash
 # From your project root
@@ -10,12 +10,14 @@ mkdir -p .cursor/skills
 cp -r /path/to/devin-handoff/.agents/skills/devin-handoff/ .cursor/skills/devin-handoff/
 ```
 
-### Windsurf
+Cursor also auto-discovers `.agents/skills/`, so committing the skill there
+works too.
+
+### Global (all projects)
 
 ```bash
-# From your project root
-mkdir -p .windsurf/skills
-cp -r /path/to/devin-handoff/.agents/skills/devin-handoff/ .windsurf/skills/devin-handoff/
+mkdir -p ~/.cursor/skills
+cp -r /path/to/devin-handoff/.agents/skills/devin-handoff/ ~/.cursor/skills/devin-handoff/
 ```
 
 ## API Key Setup

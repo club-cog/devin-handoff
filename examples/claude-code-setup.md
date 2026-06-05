@@ -12,7 +12,8 @@ From inside Claude Code:
 ```
 
 This installs the skill for all your projects and pulls updates when you run
-`/plugin marketplace update cognition`.
+`/plugin marketplace update cognition`. After setting your API key (below),
+run `/devin-handoff:setup` to verify everything is ready.
 
 ### Option B: Per-project skill (for teams)
 

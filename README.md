@@ -57,7 +57,7 @@ export DEVIN_API_KEY="your-key-here"
 ```
 
 Then ask your agent to "hand this off to Devin." See [examples/](examples/)
-for per-platform setup guides (Claude Code, Cursor, Windsurf, Codex).
+for per-platform setup guides (Claude Code, Cursor, Codex).
 
 For agents that use `AGENTS.md`, append the guide:
 

@@ -26,6 +26,8 @@ Then set your API key (get one at https://app.devin.ai/settings/api-keys):
 export DEVIN_API_KEY="your-key-here"
 ```
 
+Run `/devin-handoff:setup` to verify everything is ready.
+
 That's it — ask Claude Code to "hand this off to Devin."
 
 ### As an agent skill

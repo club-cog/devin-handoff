@@ -13,6 +13,17 @@ engineer. Use it when a task needs a VM, browser, CI, or long-running execution.
 - **Long-running work**: Migrations, batch processing, large refactors
 - **Parallel execution**: Offload work while you continue locally
 
+## Finding the script
+
+`scripts/devin-handoff.sh` below refers to wherever the script lives in your
+setup. Check, in order:
+
+1. `scripts/devin-handoff.sh` in the current repo
+2. An installed `devin-handoff` skill or plugin (the script sits next to its
+   `SKILL.md`, e.g. `.agents/skills/devin-handoff/scripts/devin-handoff.sh`)
+3. If neither exists, clone it:
+   `git clone https://github.com/club-cog/devin-handoff.git`
+
 ## How to use
 
 1. Gather context from the current repo (the script does this automatically)

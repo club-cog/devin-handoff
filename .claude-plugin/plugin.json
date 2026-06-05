@@ -6,8 +6,8 @@
   "author": {
     "name": "Cognition"
   },
-  "homepage": "https://github.com/club-cog/devin-handoff-skill",
-  "repository": "https://github.com/club-cog/devin-handoff-skill",
+  "homepage": "https://github.com/club-cog/devin-handoff",
+  "repository": "https://github.com/club-cog/devin-handoff",
   "license": "MIT",
   "keywords": ["devin", "handoff", "delegation", "cloud", "agent"]
 }

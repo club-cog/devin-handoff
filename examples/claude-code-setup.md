@@ -7,7 +7,7 @@
 From inside Claude Code:
 
 ```
-/plugin marketplace add club-cog/devin-handoff-skill
+/plugin marketplace add club-cog/devin-handoff
 /plugin install devin-handoff@cognition
 ```
 

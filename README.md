@@ -3,6 +3,7 @@
 [![Built by Devin](https://raw.githubusercontent.com/club-cog/built-by-devin/main/badges/built-by-devin.svg)](https://devin.ai)
 
 Hand off tasks to [Devin](https://devin.ai) from any coding agent or the command line.
+Set it up as a plugin or skill in Claude Code, Codex, Cursor, and more.
 
 Create a Devin session, get a URL, optionally poll until it's done, archive when finished.
 
@@ -28,7 +29,7 @@ Create a Devin session, get a URL, optionally poll until it's done, archive when
 Add the marketplace and install the plugin from inside Claude Code:
 
 ```
-/plugin marketplace add club-cog/devin-handoff-skill
+/plugin marketplace add club-cog/devin-handoff
 /plugin install devin-handoff@cognition
 ```
 
@@ -46,11 +47,11 @@ Install it into your coding agent's skills folder so the agent can hand off
 tasks to Devin on its own:
 
 ```bash
-git clone https://github.com/club-cog/devin-handoff-skill.git
+git clone https://github.com/club-cog/devin-handoff.git
 
 # Copy into your agent's skills directory — adjust the path for your agent
 mkdir -p .your-agent/skills
-cp -r devin-handoff-skill/ .your-agent/skills/devin-handoff/
+cp -r devin-handoff/ .your-agent/skills/devin-handoff/
 
 # Set your API key (get one at https://app.devin.ai/settings/api-keys)
 export DEVIN_API_KEY="your-key-here"
@@ -62,7 +63,7 @@ for per-platform setup guides (Claude Code, Cursor, Codex).
 For agents that use `AGENTS.md`, append the guide:
 
 ```bash
-cat devin-handoff-skill/AGENTS.md >> your-repo/AGENTS.md
+cat devin-handoff/AGENTS.md >> your-repo/AGENTS.md
 ```
 
 ### From the command line
@@ -72,11 +73,11 @@ cat devin-handoff-skill/AGENTS.md >> your-repo/AGENTS.md
 export DEVIN_API_KEY="your-key-here"  # Get one at https://app.devin.ai/settings/api-keys
 
 # 2. Create a session from any git repo
-./devin-handoff-skill/scripts/devin-handoff.sh create --task "Fix the flaky auth test in CI"
+./devin-handoff/scripts/devin-handoff.sh create --task "Fix the flaky auth test in CI"
 # → https://app.devin.ai/sessions/abc123
 
 # 3. (Optional) Poll until it's done
-./devin-handoff-skill/scripts/devin-handoff.sh poll devin-abc123 --interval 15
+./devin-handoff/scripts/devin-handoff.sh poll devin-abc123 --interval 15
 ```
 
 ## How It Works

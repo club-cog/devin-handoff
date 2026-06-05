@@ -1,0 +1,21 @@
+{
+  "name": "cognition",
+  "owner": {
+    "name": "Cognition"
+  },
+  "metadata": {
+    "description": "Cognition plugins for Claude Code.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "devin-handoff",
+      "description": "Hand off tasks to a cloud Devin session — VM, browser, shell, and full repo access. Create a session, get a URL, poll until done.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Cognition"
+      },
+      "source": "./"
+    }
+  ]
+}

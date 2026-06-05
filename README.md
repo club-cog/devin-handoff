@@ -23,6 +23,23 @@ Create a Devin session, get a URL, optionally poll until it's done, archive when
 
 ## Quick Start
 
+### As a Claude Code plugin (1-click install)
+
+Add the marketplace and install the plugin from inside Claude Code:
+
+```
+/plugin marketplace add club-cog/devin-handoff-skill
+/plugin install devin-handoff@cognition
+```
+
+Then set your API key (get one at https://app.devin.ai/settings/api-keys):
+
+```bash
+export DEVIN_API_KEY="your-key-here"
+```
+
+That's it — ask Claude Code to "hand this off to Devin."
+
 ### As an agent skill
 
 Install it into your coding agent's skills folder so the agent can hand off

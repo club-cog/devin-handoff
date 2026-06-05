@@ -12,6 +12,10 @@ Hand off a task to Devin. Devin gets its own VM with shell, browser,
 and full repo access. You get a URL to watch progress, or can poll
 until the session completes.
 
+All `scripts/devin-handoff.sh` paths below are relative to this skill's
+directory. If installed as a Claude Code plugin, use
+`"${CLAUDE_PLUGIN_ROOT}/scripts/devin-handoff.sh"`.
+
 ## Prerequisites
 
 - `DEVIN_API_KEY` env var (get one at https://app.devin.ai/settings/api-keys)

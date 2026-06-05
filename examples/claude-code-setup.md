@@ -2,7 +2,19 @@
 
 ## Installation
 
-### Option A: Per-project (recommended for teams)
+### Option A: Plugin (recommended — 1-click install)
+
+From inside Claude Code:
+
+```
+/plugin marketplace add club-cog/devin-handoff-skill
+/plugin install devin-handoff@cognition
+```
+
+This installs the skill for all your projects and pulls updates when you run
+`/plugin marketplace update cognition`.
+
+### Option B: Per-project skill (for teams)
 
 ```bash
 # From your project root
@@ -12,7 +24,7 @@ cp -r /path/to/devin-handoff/ .claude/skills/devin-handoff/
 
 This makes the skill available to everyone working on the project.
 
-### Option B: Global (personal, all projects)
+### Option C: Global skill (manual copy)
 
 ```bash
 cp -r /path/to/devin-handoff/ ~/.claude/skills/devin-handoff/

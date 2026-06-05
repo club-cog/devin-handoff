@@ -2,7 +2,19 @@
 
 ## Installation
 
-Codex uses `AGENTS.md` files for agent guidance. You need to:
+### Option A: Plugin (recommended — 1-click install)
+
+```bash
+codex plugin marketplace add club-cog/devin-handoff
+codex plugin add devin-handoff@cognition
+```
+
+This installs the `devin-handoff` skill for all your projects. Update later
+with `codex plugin marketplace upgrade cognition`.
+
+### Option B: AGENTS.md (per-repo)
+
+Codex also reads `AGENTS.md` files for agent guidance. You can:
 
 1. Copy the handoff script into your repo
 2. Add the agent guidance to your `AGENTS.md`
@@ -10,7 +22,7 @@ Codex uses `AGENTS.md` files for agent guidance. You need to:
 ```bash
 # From your project root
 mkdir -p scripts
-cp /path/to/devin-handoff/scripts/devin-handoff.sh scripts/devin-handoff.sh
+cp /path/to/devin-handoff/skills/devin-handoff/scripts/devin-handoff.sh scripts/devin-handoff.sh
 chmod +x scripts/devin-handoff.sh
 
 # Append the Devin handoff guidance to your AGENTS.md

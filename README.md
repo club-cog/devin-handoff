@@ -30,6 +30,18 @@ Run `/devin-handoff:setup` to verify everything is ready.
 
 That's it — ask Claude Code to "hand this off to Devin."
 
+### As a Codex plugin
+
+Same idea, from your terminal:
+
+```bash
+codex plugin marketplace add club-cog/devin-handoff
+codex plugin add devin-handoff@cognition
+export DEVIN_API_KEY="your-key-here"
+```
+
+Then ask Codex to "hand this off to Devin."
+
 ### As an agent skill
 
 Install it into your coding agent's skills folder so the agent can hand off
@@ -40,7 +52,7 @@ git clone https://github.com/club-cog/devin-handoff.git
 
 # Copy into your agent's skills directory — adjust the path for your agent
 mkdir -p .your-agent/skills
-cp -r devin-handoff/ .your-agent/skills/devin-handoff/
+cp -r devin-handoff/skills/devin-handoff/ .your-agent/skills/devin-handoff/
 
 # Set your API key (get one at https://app.devin.ai/settings/api-keys)
 export DEVIN_API_KEY="your-key-here"

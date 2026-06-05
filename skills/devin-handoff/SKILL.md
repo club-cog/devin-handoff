@@ -13,8 +13,8 @@ and full repo access. You get a URL to watch progress, or can poll
 until the session completes.
 
 All `scripts/devin-handoff.sh` paths below are relative to this skill's
-directory. If installed as a Claude Code plugin, use
-`"${CLAUDE_PLUGIN_ROOT}/scripts/devin-handoff.sh"`.
+directory. If installed as a Claude Code or Codex plugin, use
+`"${CLAUDE_PLUGIN_ROOT}/skills/devin-handoff/scripts/devin-handoff.sh"`.
 
 ## Prerequisites
 

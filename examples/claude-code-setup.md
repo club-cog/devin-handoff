@@ -19,7 +19,7 @@ This installs the skill for all your projects and pulls updates when you run
 ```bash
 # From your project root
 mkdir -p .claude/skills
-cp -r /path/to/devin-handoff/ .claude/skills/devin-handoff/
+cp -r /path/to/devin-handoff/skills/devin-handoff/ .claude/skills/devin-handoff/
 ```
 
 This makes the skill available to everyone working on the project.
@@ -27,7 +27,7 @@ This makes the skill available to everyone working on the project.
 ### Option C: Global skill (manual copy)
 
 ```bash
-cp -r /path/to/devin-handoff/ ~/.claude/skills/devin-handoff/
+cp -r /path/to/devin-handoff/skills/devin-handoff/ ~/.claude/skills/devin-handoff/
 ```
 
 ## API Key Setup

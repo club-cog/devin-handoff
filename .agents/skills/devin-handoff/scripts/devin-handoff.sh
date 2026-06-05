@@ -14,7 +14,7 @@
 
 set -euo pipefail
 
-readonly VERSION="1.2.0"
+readonly VERSION="1.3.0"
 readonly MAX_DIFF_BYTES=102400  # 100KB
 readonly DEFAULT_POLL_INTERVAL=30
 
@@ -29,6 +29,7 @@ usage() {
 Usage:
   devin-handoff.sh create --task TASK [OPTIONS]
   devin-handoff.sh poll SESSION_ID [OPTIONS]
+  devin-handoff.sh archive SESSION_ID [OPTIONS]
 
 Commands:
   create    Create a Devin session and print the session URL

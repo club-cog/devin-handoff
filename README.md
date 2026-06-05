@@ -1,6 +1,6 @@
-[![Built by Devin](https://img.shields.io/badge/Built%20by-Devin-blue?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSJub25lIj48cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHJ4PSI0IiBmaWxsPSJibGFjayIvPjxwYXRoIGQ9Ik00IDEyLjc1VjguNUwxMiA0LjVWOC43NUw0IDEyLjc1WiIgZmlsbD0id2hpdGUiLz48L3N2Zz4=)](https://devin.ai)
-
 # Devin Handoff
+
+[![Built by Devin](https://raw.githubusercontent.com/club-cog/built-by-devin/main/badges/built-by-devin.svg)](https://devin.ai)
 
 Hand off tasks to [Devin](https://devin.ai) from any coding agent or the command line.
 

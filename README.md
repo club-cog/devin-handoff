@@ -9,19 +9,6 @@ Create a Devin session, get a URL, optionally poll until it's done, archive when
 
 ![Demo: a coding agent hands three tasks off to three cloud Devin sessions, which open PRs that get merged](assets/devin-handoff-demo.gif)
 
-```
-┌──────────────┐     ┌──────────────────┐     ┌────────────┐
-│  Your Agent  │     │  devin-handoff   │     │ Devin API  │
-│  or CLI      │────▶│  skill + script  │────▶│  (REST)    │
-└──────────────┘     └──────────────────┘     └────────────┘
-                           │                       │
-                           │ 1. Gather git context  │
-                           │ 2. POST /sessions ───▶│
-                           │◀─ session_id + url ────│
-                           │ 3. Print URL           │
-                           │ 4. (optional) Poll ───▶│
-```
-
 ## Quick Start
 
 ### As a Claude Code plugin (1-click install)

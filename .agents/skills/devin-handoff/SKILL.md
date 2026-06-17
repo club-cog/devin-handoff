@@ -1,14 +1,14 @@
 ---
 name: devin-handoff
 description: >
-  Hand off a task to a cloud Devin session, OR inspect/resolve an existing
-  Devin session. Use when the task needs
-  Devin's full environment (VM, browser, shell) — e.g. multi-file changes,
-  tasks needing a running server, CI work, or long-running autonomous work.
-  ALSO use whenever you're given a Devin session URL or session ID (e.g.
-  https://app.devin.ai/sessions/... or *.devinenterprise.com/sessions/...) and
-  need to find its PR, status, branch, or latest message — the `check`/`poll`
-  commands resolve a session into its PR URL and status without opening the web UI.
+  Spin off parallel cloud Devin sessions. Hand off a task to a fresh cloud Devin
+  session that runs in the background — each gets its own VM with shell, browser,
+  and full repo access — so you can fan out several sessions at once and keep
+  working locally while they run. Use for parallel or long-running work and
+  anything needing Devin's full environment: multi-file changes, running servers,
+  CI work, browser automation, migrations, or large refactors. Also an API for
+  reading and interacting with current sessions — given a session URL or ID, the
+  check/poll commands return its PR, status, branch, and latest message.
 ---
 
 # Devin Handoff

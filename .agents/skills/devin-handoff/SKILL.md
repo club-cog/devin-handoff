@@ -1,9 +1,14 @@
 ---
 name: devin-handoff
 description: >
-  Hand off a task to a cloud Devin session. Use when the task needs
+  Hand off a task to a cloud Devin session, OR inspect/resolve an existing
+  Devin session. Use when the task needs
   Devin's full environment (VM, browser, shell) — e.g. multi-file changes,
   tasks needing a running server, CI work, or long-running autonomous work.
+  ALSO use whenever you're given a Devin session URL or session ID (e.g.
+  https://app.devin.ai/sessions/... or *.devinenterprise.com/sessions/...) and
+  need to find its PR, status, branch, or latest message — the `check`/`poll`
+  commands resolve a session into its PR URL and status without opening the web UI.
 ---
 
 # Devin Handoff

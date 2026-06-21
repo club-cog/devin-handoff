@@ -14,8 +14,12 @@
 -- SECTION 0: GUARDRAIL CHECKS
 -- ============================================================
 
--- [G1] Cohort size per plan
+-- [G1] Cohort size per plan (Analysis 1: activated cohort)
 -- Verifies each plan has >= 100 users in the analysis cohort
+-- Analysis 1 uses an activated cohort: users with >=1 usage day in first 14 days.
+-- The "0" bucket means "used the product but never triggered this specific feature",
+-- NOT "never showed up at all". This prevents inactive signups from inflating the
+-- zero-bucket retention rate.
 WITH cohort_base AS (
   SELECT u.user_id, u.created_at
   FROM exafunction.analytics.dim_users u
@@ -29,9 +33,32 @@ web_active AS (
   WHERE ts_received >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
     AND event_name = 'User:Navigate:Page'
 ),
+activity AS (
+  SELECT user_id, DATE(created_at) AS d
+  FROM exafunction.analytics.dim_sessions
+  WHERE created_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
+    AND NOT is_cognition_session_in_customer_org
+  GROUP BY 1, 2
+  UNION DISTINCT
+  SELECT user_id, DATE(window_start) AS d
+  FROM exafunction.analytics.hourly_consumption_by_user
+  WHERE window_start >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
+    AND internal_acu_delta > 0
+  GROUP BY 1, 2
+),
+activated_users AS (
+  -- Users with >=1 usage day (session or ACU consumption) in their first 14 days
+  SELECT a.user_id
+  FROM activity a
+  INNER JOIN cohort_base c ON a.user_id = c.user_id
+  WHERE DATE_DIFF(a.d, DATE(c.created_at), DAY) BETWEEN 0 AND 13
+  GROUP BY a.user_id
+  HAVING COUNT(DISTINCT a.d) >= 1
+),
 cohort AS (
   SELECT c.* FROM cohort_base c
   INNER JOIN web_active w ON c.user_id = w.user_id
+  INNER JOIN activated_users au ON c.user_id = au.user_id
 ),
 plans AS (
   SELECT user_id,

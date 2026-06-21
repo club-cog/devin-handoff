@@ -13,6 +13,23 @@
 
 ---
 
+## Key Findings & Interpretation
+
+**The negative separation power is a real signal, not a bug.**
+On Free plans, users who trigger advanced features (Computer Use, web search, MCP tools) in week 1 churn *more* than those who don't. Interpretation: these are users attempting complex tasks on a free-tier ACU budget, hitting limits, and leaving frustrated. This is not a reason to hide these features — it is a reason to surface upgrade prompts at the moment of feature use on Free.
+
+**The actionable signal is the PR + MCP interaction.**
+Among users who created a PR in week 1, adding MCP tool usage produces a consistent retention lift across all plans:
+- Free: 6.7% → 15.7% D30 (RR 2.34, p<0.001)
+- Pro: 48.0% → 60.6% D30 (RR 1.26, p<0.001)
+- Teams: 59.9% → 73.2% D30 (RR 1.22, p<0.001)
+
+This combination — shipping code AND using integrations — is the highest-quality activation signal in this dataset. It should be the target state for lifecycle email CTAs, not individual feature adoption.
+
+**Playbook signal is directional only.** n=121 Free users, n=120 TrialPro users triggered a playbook in week 1. All results for `playbook_triggered` should be treated as directional until cohort matures.
+
+---
+
 ## Used MCP tools (`mcp_tool_call`)
 
 | Plan | Bucket | n | D30 % | D60 % | D60 eligible n | Churned % | RR vs zero | Chi-sq p | Sig |

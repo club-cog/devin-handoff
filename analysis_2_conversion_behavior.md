@@ -13,6 +13,21 @@
 
 ---
 
+## Key Findings & Interpretation
+
+**High RR behaviors have low absolute n — treat with caution.**
+Playbook RR=9.06 is based on ~38 converter users (0.5% of 7,642). CI checks RR=3.67 is based on ~275 users. These ratios are directionally correct but statistically fragile. The most reliable conversion predictors by both RR and n are: merged PR (n=893 converters, RR 3.68) and MCP tools (n=229 converters, RR 3.05).
+
+**Most reliable model output: logistic regression.**
+With balanced features and full n, the logistic regression is more trustworthy than raw RR for small-n behaviors. Top predictors by odds ratio: has_ci (OR 2.74), has_playbook (OR 2.32), has_merge (OR 1.66), has_mcp_tool (OR 1.62). All significant at p<0.05.
+
+**Counter-intuitive finding: merging code slows conversion.**
+Users who merged a PR before converting took a median of 71 days to pay vs 49 days for those who did not merge. Possible explanation: users who ship code successfully are getting value from Free and have lower urgency to upgrade. Implication: merge is a retention signal, not a conversion accelerator. Conversion emails for merge users should emphasize team features and scale — not "unlock more" framing.
+
+**Onboarding tour and Review feature show negative association with conversion** (RR 0.84 and 0.76). This is almost certainly reverse causation: users who spend time on tours and reviewing PRs are already engaged enough to stay Free longer. Do not interpret as "tours hurt conversion".
+
+---
+
 ## Behavior Comparison Table
 
 | # | Behavior | Converters % | Non-converters % | RR | Chi-sq p | Sig | Verdict |

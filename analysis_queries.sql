@@ -7,8 +7,17 @@
 -- ============================================================
 
 -- Summary of Analysis 3 (Email List Enrichment):
--- Input file: devin_product_launch_email_list.csv (not available this run)
--- Analysis 3 pending email list file from user
+-- Input file: devin_product_launch_email_list.csv
+-- Total input rows: 31,074
+-- Rows after filtering (spam + non-target plans): 29,682
+-- Match rate by method:
+--   email (primary_email_address): 29,679 (100.0%)
+--   unmatched: 3
+-- Lifecycle stage distribution:
+--   churned_likely: 27,424 | no_github: 1,695 | at_risk_not_activated: 203
+--   unknown: 148 | at_risk_high: 136 | activated: 50
+--   pr_no_merge: 12 | at_risk_activated: 11 | unmatched: 3
+-- Users with last_session_date delta > 7 days: 1,796
 
 -- ============================================================
 -- SECTION 0: GUARDRAIL CHECKS
@@ -229,22 +238,74 @@ GROUP BY ae.user_id;
 -- SECTION 4: ANALYSIS 3 — Email List Enrichment
 -- ============================================================
 
--- [A3-MATCH] User matching strategy (email -> username -> org_id)
--- Note: Email list file not provided in this session.
--- Match strategy:
---   1. Primary: LOWER(TRIM(email)) -> analytics.dim_users.primary_email_address
---   2. Fallback 1: username -> analytics.dim_users.username
---   3. Fallback 2: org_id -> analytics.dim_user_orgs.org_id -> user_id
-SELECT user_id, LOWER(primary_email_address) AS email, username
-FROM exafunction.analytics.dim_users;
+-- [A3-MATCH] User matching strategy
+-- Primary match: LOWER(TRIM(email)) -> dim_users.primary_email_address
+-- Result: 29,679 / 29,682 matched (100.0%) — fallbacks not needed
+-- Batched in groups of 50 to avoid MCP response truncation
+SELECT LOWER(TRIM(primary_email_address)) AS email, user_id
+FROM exafunction.analytics.dim_users
+WHERE LOWER(TRIM(primary_email_address)) IN (<email_batch>);
 
--- [A3-ENRICH] All appended fields per matched user
--- Fields: has_pr, has_merge, first_pr_date, first_merge_date,
---         last_active_date_bq, days_since_last_active,
---         total_active_days_90d, active_days_14d, acus_week1,
---         weekly_acus_avg_90d, lifecycle_stage, churn_risk
--- All activity fields use the session + ACU consumption union (CTE: activity)
+-- [A3-ENRICH-PR] PR data per matched user
+SELECT user_id,
+  MAX(CASE WHEN created_at IS NOT NULL THEN 1 ELSE 0 END) AS has_pr,
+  MAX(CASE WHEN merged_at IS NOT NULL THEN 1 ELSE 0 END) AS has_merge,
+  CAST(MIN(DATE(created_at)) AS STRING) AS first_pr_date,
+  CAST(MIN(DATE(merged_at)) AS STRING) AS first_merge_date
+FROM exafunction.analytics.pull_requests
+WHERE user_id IN (<user_id_batch>)
+GROUP BY user_id;
 
--- [A3-STAGE] Lifecycle stage assignment
--- Priority order: churned_likely > at_risk_high > at_risk_activated >
---   at_risk_not_activated > activated > pr_no_merge > no_github > unknown
+-- [A3-ENRICH-ACTIVITY] Activity data per matched user
+-- Uses the standard session + ACU consumption union
+WITH activity AS (
+  SELECT user_id, DATE(created_at) AS d
+  FROM exafunction.analytics.dim_sessions
+  WHERE created_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
+    AND NOT is_cognition_session_in_customer_org
+    AND user_id IN (<user_id_batch>)
+  GROUP BY 1, 2
+  UNION DISTINCT
+  SELECT user_id, DATE(window_start) AS d
+  FROM exafunction.analytics.hourly_consumption_by_user
+  WHERE window_start >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
+    AND internal_acu_delta > 0
+    AND user_id IN (<user_id_batch>)
+  GROUP BY 1, 2
+),
+user_signup AS (
+  SELECT user_id, DATE(created_at) AS signup_date
+  FROM exafunction.analytics.dim_users
+  WHERE user_id IN (<user_id_batch>)
+)
+SELECT a.user_id,
+  CAST(MAX(a.d) AS STRING) AS last_active_date_bq,
+  COUNT(DISTINCT a.d) AS total_active_days_90d,
+  COUNT(DISTINCT CASE WHEN DATE_DIFF(a.d, us.signup_date, DAY) BETWEEN 0 AND 13 THEN a.d END) AS active_days_14d
+FROM activity a
+LEFT JOIN user_signup us ON a.user_id = us.user_id
+GROUP BY a.user_id;
+
+-- [A3-ENRICH-ACU] ACU consumption per matched user
+-- Uses hourly_consumption_by_user.window_start for correct time-series bucketing
+WITH user_signup AS (
+  SELECT user_id, created_at
+  FROM exafunction.analytics.dim_users
+  WHERE user_id IN (<user_id_batch>)
+)
+SELECT h.user_id,
+  ROUND(CAST(SUM(CASE WHEN TIMESTAMP_DIFF(h.window_start, us.created_at, HOUR) BETWEEN 0 AND 167
+    THEN h.internal_acu_delta ELSE 0 END) AS FLOAT64), 2) AS acus_week1,
+  ROUND(CAST(SUM(h.internal_acu_delta) AS FLOAT64) / 13.0, 2) AS weekly_acus_avg_90d
+FROM exafunction.analytics.hourly_consumption_by_user h
+INNER JOIN user_signup us ON h.user_id = us.user_id
+WHERE h.window_start >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
+  AND h.user_id IN (<user_id_batch>)
+GROUP BY h.user_id;
+
+-- [A3-STAGE] Lifecycle stage assignment (computed in Python)
+-- Priority order: churned_likely (dsa >= 60 or no activity) > at_risk_high (dsa >= 30) >
+--   at_risk_activated (dsa >= 14, has_merge) > at_risk_not_activated (dsa >= 14, no merge) >
+--   activated (has_merge, active_days_14d >= 4) > pr_no_merge > no_github > unknown
+-- Churn risk: high (dsa >= 14 or no activity) > medium (dsa >= 7) > low
+-- Note: trial_end_date not populated (dim_historic_subscriptions likely 403)

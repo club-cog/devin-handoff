@@ -43,8 +43,10 @@ scripts/devin-handoff.sh create \
 scripts/devin-handoff.sh poll SESSION_ID --interval 15
 ```
 
-The poll command prints status updates every N seconds and exits when
-the session reaches a terminal state. It prints the PR URL if one was created.
+The poll command prints status updates every N seconds and exits when Devin
+finishes (`exit`/`error`/`suspended`) or reaches `waiting_for_user` — meaning
+Devin has stopped working and is waiting on a message from you, which for a
+handoff counts as done. It prints the PR URL if one was created.
 
 6. To archive the session when done:
 

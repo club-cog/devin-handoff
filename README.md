@@ -122,7 +122,7 @@ Usage:
 
 Commands:
   create    Create a Devin session and print the session URL
-  poll      Poll a session until it reaches a terminal state
+  poll      Poll a session until it finishes or is waiting on a message from you
   archive   Archive a completed session
 
 create options:

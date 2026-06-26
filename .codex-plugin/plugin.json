@@ -1,6 +1,6 @@
 {
   "name": "devin-handoff",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Hand off tasks to a cloud Devin session — VM, browser, shell, and full repo access. Create a session, get a URL, poll until done.",
   "author": {
     "name": "Cognition"

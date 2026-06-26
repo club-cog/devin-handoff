@@ -14,7 +14,7 @@
 
 set -euo pipefail
 
-readonly VERSION="1.3.0"
+readonly VERSION="1.4.0"
 readonly MAX_DIFF_BYTES=102400  # 100KB
 readonly DEFAULT_POLL_INTERVAL=30
 
@@ -33,7 +33,7 @@ Usage:
 
 Commands:
   create    Create a Devin session and print the session URL
-  poll      Poll a session until it reaches a terminal state
+  poll      Poll a session until it finishes or is waiting on a message from you
   archive   Archive a completed session
 
 create options:
@@ -270,33 +270,34 @@ cmd_poll() {
 
     echo "[$(date +%H:%M:%S)] status=$status${status_detail:+ detail=$status_detail}" >&2
 
-    case "$status" in
-      # Terminal states
-      exit|error|suspended)
-        local pr_url title
-        title=$(echo "$body" | jq -r '.title // empty')
-        # v1 nests PR under pull_request.url; v3 under pull_requests[0].url
-        pr_url=$(echo "$body" | jq -r '(.pull_request.url // .pull_requests[0].url) // empty' 2>/dev/null)
+    # Terminal conditions. waiting_for_user means Devin has stopped working and is
+    # waiting on a message from us; for a handoff that counts as done, so stop
+    # polling instead of looping until the VM is suspended.
+    if [[ "$status" == "exit" || "$status" == "error" || "$status" == "suspended" \
+          || "$status_detail" == "waiting_for_user" ]]; then
+      local pr_url title
+      title=$(echo "$body" | jq -r '.title // empty')
+      # v1 nests PR under pull_request.url; v3 under pull_requests[0].url
+      pr_url=$(echo "$body" | jq -r '(.pull_request.url // .pull_requests[0].url) // empty' 2>/dev/null)
 
-        echo ""
-        echo "Session finished: status=$status${status_detail:+ ($status_detail)}"
-        [[ -n "$title" ]] && echo "Title: $title"
-        [[ -n "$pr_url" ]] && echo "PR: $pr_url"
-        echo "$body" | jq -r '.url // empty' | grep -q . && echo "URL: $(echo "$body" | jq -r '.url')"
+      echo ""
+      echo "Session finished: status=$status${status_detail:+ ($status_detail)}"
+      [[ -n "$title" ]] && echo "Title: $title"
+      [[ -n "$pr_url" ]] && echo "PR: $pr_url"
+      echo "$body" | jq -r '.url // empty' | grep -q . && echo "URL: $(echo "$body" | jq -r '.url')"
 
-        # Archive if requested
-        if [[ "$do_archive" == true ]]; then
-          echo "Archiving session..." >&2
-          api_request POST "$api_url/v3/organizations/$org_id/sessions/$session_id/archive" >/dev/null 2>&1 \
-            && echo "Archived." >&2 \
-            || echo "Warning: archive failed." >&2
-        fi
+      # Archive if requested
+      if [[ "$do_archive" == true ]]; then
+        echo "Archiving session..." >&2
+        api_request POST "$api_url/v3/organizations/$org_id/sessions/$session_id/archive" >/dev/null 2>&1 \
+          && echo "Archived." >&2 \
+          || echo "Warning: archive failed." >&2
+      fi
 
-        # Exit 0 for successful finish, 1 for error
-        [[ "$status" == "exit" ]] && exit 0
-        exit 1
-        ;;
-    esac
+      # Exit 0 for a clean finish or when Devin is waiting on us; 1 for error/suspended
+      [[ "$status" == "exit" || "$status_detail" == "waiting_for_user" ]] && exit 0
+      exit 1
+    fi
 
     sleep "$interval"
   done

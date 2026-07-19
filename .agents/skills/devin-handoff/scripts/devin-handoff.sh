@@ -270,11 +270,19 @@ cmd_poll() {
 
     echo "[$(date +%H:%M:%S)] status=$status${status_detail:+ detail=$status_detail}" >&2
 
-    # Terminal conditions. waiting_for_user means Devin has stopped working and is
-    # waiting on a message from us; for a handoff that counts as done, so stop
-    # polling instead of looping until the VM is suspended.
-    if [[ "$status" == "exit" || "$status" == "error" || "$status" == "suspended" \
-          || "$status_detail" == "waiting_for_user" ]]; then
+    # Terminal conditions. Top-level failure states take precedence over status
+    # details. waiting_for_user and finished both mean Devin has stopped working;
+    # for a handoff they count as done, so stop polling instead of waiting for the
+    # VM to exit or suspend.
+    local terminal_rc=""
+    if [[ "$status" == "error" || "$status" == "suspended" ]]; then
+      terminal_rc=1
+    elif [[ "$status" == "exit" || "$status_detail" == "waiting_for_user" \
+            || "$status_detail" == "finished" ]]; then
+      terminal_rc=0
+    fi
+
+    if [[ -n "$terminal_rc" ]]; then
       local pr_url title
       title=$(echo "$body" | jq -r '.title // empty')
       # v1 nests PR under pull_request.url; v3 under pull_requests[0].url
@@ -294,9 +302,7 @@ cmd_poll() {
           || echo "Warning: archive failed." >&2
       fi
 
-      # Exit 0 for a clean finish or when Devin is waiting on us; 1 for error/suspended
-      [[ "$status" == "exit" || "$status_detail" == "waiting_for_user" ]] && exit 0
-      exit 1
+      exit "$terminal_rc"
     fi
 
     sleep "$interval"
